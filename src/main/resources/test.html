@@ -2,13 +2,36 @@
 <html>
 <body>
 
+<div id="map"></div>
+
 <button onclick="post()">Create Post</button>
 
 <button onclick="getPosts()">Get NearMe posts</button>
 
 <p id="demo"></p>
 
+<script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
+        defer
+></script>
+
 <script>
+function initMap() {
+  const myLatLng = { lat: -25.363, lng: 131.044 };
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 4,
+    center: myLatLng,
+  });
+
+  new google.maps.Marker({
+    position: myLatLng,
+    map,
+    title: "Hello World!",
+  });
+}
+
+window.initMap = initMap;
+
 var x = document.getElementById("demo");
 
 function post() {
@@ -29,7 +52,7 @@ function createPost(position) {
   var json = JSON.stringify(data);
 
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://localhost:9000/posts", true);
+  xhr.open("POST", "http://192.168.0.13:9000/posts", true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(json);
   x.innerHTML = "Post Created";
@@ -51,7 +74,7 @@ function getNearMePosts(position) {
 
   var json = JSON.stringify(data);
 
- const fetchPromise = fetch("http://localhost:9000/posts/nearMe", {
+ const fetchPromise = fetch("http://192.168.0.13:9000/posts/nearMe", {
     method: "post",
     headers: {
       'Accept': 'application/json',
