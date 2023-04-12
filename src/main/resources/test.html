@@ -1,8 +1,57 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+</head>
 <body>
 
-<div id="map"></div>
+<div id="map" style="width: 900px; height: 580px"></div>
+
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+<script>
+         let mapOptions;
+
+         let map;
+
+         let layer;
+
+         function getLocation(position, data) {
+             var location = {
+                latitude: position.coords.latitude,
+                longitude:  position.coords.longitude
+             };
+
+              // Creating map options
+              mapOptions = {
+                center: [location.latitude, location.longitude],
+                zoom: 10
+              }
+
+              // Creating a map object
+              if(map == undefined) {
+                map = new L.map('map', mapOptions);
+              }
+
+              // Creating a Layer object
+              layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+              // Adding layer to the map
+              map.addLayer(layer);
+
+              if(data) {
+                var marker = L.marker([data.data[0].latitude, data.data[0].longitude]).addTo(map);
+
+                var text = "<b>" + data.data[0].comment + "</br>";
+
+                marker.bindPopup(text);
+              }
+         }
+
+                  if (navigator.geolocation) {
+           navigator.geolocation.getCurrentPosition(getLocation);
+         }
+</script>
 
 <button onclick="post()">Create Post</button>
 
@@ -10,28 +59,7 @@
 
 <p id="demo"></p>
 
-<script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
-        defer
-></script>
-
 <script>
-function initMap() {
-  const myLatLng = { lat: -25.363, lng: 131.044 };
-  const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 4,
-    center: myLatLng,
-  });
-
-  new google.maps.Marker({
-    position: myLatLng,
-    map,
-    title: "Hello World!",
-  });
-}
-
-window.initMap = initMap;
-
 var x = document.getElementById("demo");
 
 function post() {
@@ -74,7 +102,7 @@ function getNearMePosts(position) {
 
   var json = JSON.stringify(data);
 
- const fetchPromise = fetch("http://192.168.0.13:9000/posts/nearMe", {
+  const fetchPromise = fetch("http://192.168.0.13:9000/posts/nearMe", {
     method: "post",
     headers: {
       'Accept': 'application/json',
@@ -83,12 +111,14 @@ function getNearMePosts(position) {
     body: json
   })
 
-fetchPromise.then(response => {
-  return response.json();
-}).then(data => {
-   x.innerHTML = JSON.stringify(data);
-});
+  fetchPromise.then(response => {
+    return response.json();
+  }).then(data => {
+     x.innerHTML = JSON.stringify(data);
+     getLocation(position, data);
+  });
 }
+
 </script>
 
 </body>
