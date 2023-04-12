@@ -20,6 +20,8 @@ public class Post {
     @ManyToOne
     private User user;
 
+    private String ip;
+
     private Double latitude;
 
     private Double longitude;

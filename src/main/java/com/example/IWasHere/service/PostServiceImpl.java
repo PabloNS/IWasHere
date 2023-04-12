@@ -6,8 +6,8 @@ import com.example.IWasHere.dto.PositionDTO;
 import com.example.IWasHere.dto.PostDTO;
 import com.example.IWasHere.dto.PostsDTO;
 import com.example.IWasHere.mapper.PostMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,9 +21,10 @@ public class PostServiceImpl implements PostService {
     private PostRepository postRepository;
 
     @Override
-    public void createPost(PostDTO post) {
+    public void createPost(PostDTO post, HttpServletRequest request) {
         Post postDB = postMapper.postDTOToPost(post);
         postDB.setCreationDate(LocalDateTime.now());
+        postDB.setIp(request.getRemoteAddr());
         postRepository.save(postDB);
     }
 

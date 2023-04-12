@@ -18,8 +18,7 @@ public class PostController {
 
     @PostMapping
     public void createPost(@RequestBody PostDTO post, HttpServletRequest request) {
-        System.out.println(request.getRemoteAddr());
-        postService.createPost(post);
+        postService.createPost(post, request);
     }
 
     @GetMapping
