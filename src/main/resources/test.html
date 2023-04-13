@@ -13,6 +13,8 @@
 
          let layer;
 
+         let markerGroup;
+
          function getLocation(position, data) {
              var location = {
                 latitude: position.coords.latitude,
@@ -22,31 +24,34 @@
               // Creating map options
               mapOptions = {
                 center: [location.latitude, location.longitude],
-                zoom: 10
+                zoom: 15
               }
 
               // Creating a map object
               if(map == undefined) {
                 map = new L.map('map', mapOptions);
+
+                // Creating a Layer object
+                layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+                // Adding layer to the map
+                map.addLayer(layer);
+              } else {
+                map.removeLayer(markerGroup);
               }
 
-              // Creating a Layer object
-              layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-
-              // Adding layer to the map
-              map.addLayer(layer);
+              markerGroup = L.layerGroup().addTo(map);
 
               if(data) {
                 for (const element of data.data) {
-                    var marker = L.marker([element.latitude, element.longitude]).addTo(map);
+                    var marker = L.marker([element.latitude, element.longitude]).addTo(markerGroup);
                     var text = "<b>" + element.comment + "</br>";
                     marker.bindPopup(text);
                 }
-
               }
          }
 
-                  if (navigator.geolocation) {
+         if (navigator.geolocation) {
            navigator.geolocation.getCurrentPosition(getLocation);
          }
 
