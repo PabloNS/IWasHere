@@ -3,13 +3,13 @@
 <head>
     <link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet"/>
     <style>
-    .center {
-        margin: auto;
-        width: 60%;
-        padding: 10px;
-        text-align: center;
-    }
-</style>
+         .center {
+         margin: auto;
+         width: 60%;
+         padding: 10px;
+         text-align: center;
+         }
+      </style>
 </head>
 <body>
 <div class="center" id="map" style="width: 500px; height:500px"></div>
@@ -58,7 +58,7 @@
 
               var meIcon = L.icon({
                   iconUrl: 'me.png',
-                  iconSize:     [30, 30]
+                  iconSize: [30, 30]
               });
 
               var markerLocation = L.marker([location.latitude, location.longitude], {icon: meIcon}).addTo(markerGroup);
@@ -68,7 +68,9 @@
               if(data) {
                 for (const element of data.data) {
                     var marker = L.marker([element.latitude, element.longitude]).addTo(markerGroup);
-                    var text = "<b>" + element.comment + "</br>";
+                    var text = "<b>" + element.comment.substring(0,40) + "</br>" +
+                               "<b>" + element.comment.substring(40,80) + "</br>" +
+                               "<b>" + element.comment.substring(80) + "</br>"
                     marker.bindPopup(text);
                 }
               }
@@ -77,26 +79,29 @@
          if (navigator.geolocation) {
            navigator.geolocation.getCurrentPosition(getLocation);
          }
-
-      </script>
+</script>
 <script>
-         var x = document.getElementById("result");
+         var result = document.getElementById("result");
 
          function note() {
            if (navigator.geolocation) {
              navigator.geolocation.getCurrentPosition(createNote);
            } else {
-             x.innerHTML = "Geolocation is not supported by this browser.";
+             result.innerHTML = "Geolocation is not supported by this browser.";
            }
          }
 
          function createNote(position) {
            var note = document.getElementById("comment").value;
-           var data = {
-             comment: note,
-             latitude: position.coords.latitude,
-             longitude:  position.coords.longitude
-           };
+
+           if(note.length<20 || note.length>100) {
+             result.innerHTML = "Write a note between 20 and 100 characters";
+           } else {
+               var data = {
+                comment: note,
+                latitude: position.coords.latitude,
+                longitude:  position.coords.longitude
+                };
 
            var json = JSON.stringify(data);
 
@@ -109,15 +114,16 @@
              body: json
            })
 
-           x.innerHTML = "Your note was succesfully created!";
+           result.innerHTML = "Your note was succesfully created!";
            document.getElementById('comment').value = "";
+           }
          }
 
          function getNotes() {
            if (navigator.geolocation) {
              navigator.geolocation.getCurrentPosition(getNearMeNotes);
            } else {
-             x.innerHTML = "Geolocation is not supported by this browser.";
+             result.innerHTML = "Geolocation is not supported by this browser.";
            }
          }
 
@@ -145,8 +151,6 @@
               getLocation(position, data);
            });
          }
-
-
       </script>
 </body>
 </html>
