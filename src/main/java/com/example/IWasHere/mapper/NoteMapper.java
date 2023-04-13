@@ -3,12 +3,14 @@ package com.example.IWasHere.mapper;
 import com.example.IWasHere.data.entity.Note;
 import com.example.IWasHere.dto.NoteDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface NoteMapper {
 
+    @Mapping(target = "userNickName", source = "note.user.nickName")
     NoteDTO noteToNoteDto(Note note);
 
     Note noteDTOToNote(NoteDTO note);

@@ -20,4 +20,6 @@ public class NoteDTO {
     private String comment;
 
     private LocalDateTime creationDate;
+
+    private String userNickName;
 }

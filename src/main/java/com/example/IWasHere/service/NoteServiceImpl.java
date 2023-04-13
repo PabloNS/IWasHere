@@ -1,7 +1,9 @@
 package com.example.IWasHere.service;
 
 import com.example.IWasHere.data.entity.Note;
+import com.example.IWasHere.data.entity.User;
 import com.example.IWasHere.data.repository.NoteRepository;
+import com.example.IWasHere.data.repository.UserRepository;
 import com.example.IWasHere.dto.PositionDTO;
 import com.example.IWasHere.dto.NoteDTO;
 import com.example.IWasHere.dto.NotesDTO;
@@ -20,12 +22,19 @@ public class NoteServiceImpl implements NoteService {
 
     private NoteRepository noteRepository;
 
+    private UserRepository userRepository;
+
     @Override
     public void createNote(NoteDTO note, HttpServletRequest request) {
         Note noteDB = noteMapper.noteDTOToNote(note);
 
         //to generate a note close to me
         randomizeLocationNote(noteDB);
+
+        User user = new User();
+        user.setNickName("Perry");
+        userRepository.save(user);
+        noteDB.setUser(user);
 
         noteDB.setCreationDate(LocalDateTime.now());
         noteDB.setIp(request.getRemoteAddr());

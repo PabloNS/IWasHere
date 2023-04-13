@@ -38,7 +38,7 @@
               // Creating map options
               mapOptions = {
                 center: [location.latitude, location.longitude],
-                zoom: 14
+                zoom: 18
               }
 
               // Creating a map object
@@ -52,6 +52,8 @@
                 map.addLayer(layer);
               } else {
                 map.removeLayer(markerGroup);
+                map.panTo([location.latitude, location.longitude]);
+                map.zoomIn(18);
               }
 
               markerGroup = L.layerGroup().addTo(map);
@@ -68,9 +70,10 @@
               if(data) {
                 for (const element of data.data) {
                     var marker = L.marker([element.latitude, element.longitude]).addTo(markerGroup);
-                    var text = "<b>" + element.comment.substring(0,40) + "</br>" +
-                               "<b>" + element.comment.substring(40,80) + "</br>" +
-                               "<b>" + element.comment.substring(80) + "</br>"
+                    var text = "<h2>" + element.userNickName + "</h2>" +
+                               "<br>" + element.comment.substring(0,40) + "</br>" +
+                               "<br>" + element.comment.substring(40,80) + "</br>" +
+                               "<br>" + element.comment.substring(80) + "</br>"
                     marker.bindPopup(text);
                 }
               }
@@ -96,6 +99,7 @@
 
            if(note.length<20 || note.length>100) {
              result.innerHTML = "Write a note between 20 and 100 characters";
+             result.style.color = "red";
            } else {
                var data = {
                 comment: note,
@@ -115,6 +119,7 @@
            })
 
            result.innerHTML = "Your note was succesfully created!";
+            result.style.color = "black";
            document.getElementById('comment').value = "";
            }
          }
