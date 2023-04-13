@@ -1,161 +1,164 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet"/>
-    <style>
-         .center {
-         margin: auto;
-         width: 60%;
-         padding: 10px;
-         text-align: center;
-         }
-      </style>
+  <link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet" />
+  <style>
+    .center {
+      margin: auto;
+      width: 60%;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
-<div class="center" id="map" style="width: 500px; height:500px"></div>
-<div class="center" id="buttons">
-    <input  class="center" type="text" id="comment" name="comment" placeholder="Write your note here"><br><br>
+  <div class="center" id="map" style="width: 500px; height:500px"></div>
+  <div class="center" id="buttons">
+    <input class="center" type="text" id="comment" name="comment" placeholder="Write your note here"><br><br>
     <button class="center" onclick="note()">Create Note</button>
     <p class="center" id="result"></p>
     <button class="center" onclick="getNotes()">Get NearMe notes</button>
-</div>
-<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-<script>
-         let mapOptions;
+  </div>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script>
+    let mapOptions;
 
-         let map;
+    let map;
 
-         let layer;
+    let layer;
 
-         let markerGroup;
+    let markerGroup;
 
-         function getLocation(position, data) {
-             var location = {
-                latitude: position.coords.latitude,
-                longitude:  position.coords.longitude
-             };
+    function getLocation(position, data) {
+      var location = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      };
 
-              // Creating map options
-              mapOptions = {
-                center: [location.latitude, location.longitude],
-                zoom: 18
-              }
+      // Creating map options
+      mapOptions = {
+        center: [location.latitude, location.longitude],
+        zoom: 18
+      }
 
-              // Creating a map object
-              if(map == undefined) {
-                map = new L.map('map', mapOptions);
+      // Creating a map object
+      if (map == undefined) {
+        map = new L.map('map', mapOptions);
 
-                // Creating a Layer object
-                layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        // Creating a Layer object
+        layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
 
-                // Adding layer to the map
-                map.addLayer(layer);
-              } else {
-                map.removeLayer(markerGroup);
-                map.panTo([location.latitude, location.longitude]);
-                map.zoomIn(18);
-              }
+        // Adding layer to the map
+        map.addLayer(layer);
+      } else {
+        map.removeLayer(markerGroup);
+        map.panTo([location.latitude, location.longitude]);
+        map.zoomIn(18);
+      }
 
-              markerGroup = L.layerGroup().addTo(map);
+      markerGroup = L.layerGroup().addTo(map);
 
-              var meIcon = L.icon({
-                  iconUrl: 'me.png',
-                  iconSize: [30, 30]
-              });
+      var meIcon = L.icon({
+        iconUrl: 'me.png',
+        iconSize: [30, 30]
+      });
 
-              var markerLocation = L.marker([location.latitude, location.longitude], {icon: meIcon}).addTo(markerGroup);
-              var text = "<b> Your location </br>";
-              markerLocation.bindPopup(text);
+      var markerLocation = L.marker([location.latitude, location.longitude], { icon: meIcon }).addTo(markerGroup);
+      var text = "<b> Your location </br>";
+      markerLocation.bindPopup(text);
 
-              if(data) {
-                for (const element of data.data) {
-                    var marker = L.marker([element.latitude, element.longitude]).addTo(markerGroup);
-                    var text = "<h2>" + element.userNickName + "</h2>" +
-                               "<br>" + element.comment.substring(0,40) + "</br>" +
-                               "<br>" + element.comment.substring(40,80) + "</br>" +
-                               "<br>" + element.comment.substring(80) + "</br>"
-                    marker.bindPopup(text);
-                }
-              }
-         }
+      if (data) {
+        for (const element of data.data) {
+          var marker = L.marker([element.latitude, element.longitude]).addTo(markerGroup);
+          var text = "<h2>" + element.userNickName + "</h2>" +
+            "<br>" + element.comment.substring(0, 40) + "</br>" +
+            "<br>" + element.comment.substring(40, 80) + "</br>" +
+            "<br>" + element.comment.substring(80) + "</br>"
+          marker.bindPopup(text);
+        }
+      }
+    }
 
-         if (navigator.geolocation) {
-           navigator.geolocation.getCurrentPosition(getLocation);
-         }
-</script>
-<script>
-         var result = document.getElementById("result");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(getLocation);
+    }
+  </script>
+  <script>
+    var result = document.getElementById("result");
 
-         function note() {
-           if (navigator.geolocation) {
-             navigator.geolocation.getCurrentPosition(createNote);
-           } else {
-             result.innerHTML = "Geolocation is not supported by this browser.";
-           }
-         }
+    function note() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(createNote);
+      } else {
+        result.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
 
-         function createNote(position) {
-           var note = document.getElementById("comment").value;
+    function createNote(position) {
+      var note = document.getElementById("comment").value;
 
-           if(note.length<20 || note.length>100) {
-             result.innerHTML = "Write a note between 20 and 100 characters";
-             result.style.color = "red";
-           } else {
-               var data = {
-                comment: note,
-                latitude: position.coords.latitude,
-                longitude:  position.coords.longitude
-                };
+      if (note.length < 20 || note.length > 100) {
+        result.innerHTML = "Write a note between 20 and 100 characters";
+        result.style.color = "red";
+      } else {
+        var data = {
+          comment: note,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
 
-           var json = JSON.stringify(data);
+        var json = JSON.stringify(data);
 
-           const fetchPromise = fetch("http://localhost:9000/notes", {
-             method: "post",
-             headers: {
-               'Accept': 'application/json',
-               'Content-Type': 'application/json'
-             },
-             body: json
-           })
+        const fetchPromise = fetch("http://localhost:9000/notes", {
+          method: "post",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: json
+        })
 
-           result.innerHTML = "Your note was succesfully created!";
-            result.style.color = "black";
-           document.getElementById('comment').value = "";
-           }
-         }
+        result.innerHTML = "Your note was succesfully created!";
+        result.style.color = "black";
+        document.getElementById('comment').value = "";
+      }
+    }
 
-         function getNotes() {
-           if (navigator.geolocation) {
-             navigator.geolocation.getCurrentPosition(getNearMeNotes);
-           } else {
-             result.innerHTML = "Geolocation is not supported by this browser.";
-           }
-         }
+    function getNotes() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(getNearMeNotes);
+      } else {
+        result.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
 
-         function getNearMeNotes(position) {
-           var data = {
-             latitude: position.coords.latitude,
-             longitude:  position.coords.longitude
-           };
+    function getNearMeNotes(position) {
+      var data = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      };
 
-           var json = JSON.stringify(data);
+      var json = JSON.stringify(data);
 
-           const fetchPromise = fetch("http://localhost:9000/notes/nearMe", {
-             method: "post",
-             headers: {
-               'Accept': 'application/json',
-               'Content-Type': 'application/json'
-             },
-             body: json
-           })
+      const fetchPromise = fetch("http://localhost:9000/notes/nearMe", {
+        method: "post",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: json
+      })
 
-           fetchPromise.then(response => {
-             return response.json();
-           }).then(data => {
-              console.log(JSON.stringify(data));
-              getLocation(position, data);
-           });
-         }
-      </script>
+      fetchPromise.then(response => {
+        return response.json();
+      }).then(data => {
+        console.log(JSON.stringify(data));
+        getLocation(position, data);
+      });
+    }
+  </script>
 </body>
+
 </html>
