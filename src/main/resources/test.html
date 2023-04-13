@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+    <link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet"/>
 </head>
 <body>
-
 <div id="map" style="width: 900px; height: 580px"></div>
-
 <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-
 <script>
          let mapOptions;
 
@@ -40,87 +37,84 @@
               map.addLayer(layer);
 
               if(data) {
-                var marker = L.marker([data.data[0].latitude, data.data[0].longitude]).addTo(map);
+                for (const element of data.data) {
+                    var marker = L.marker([element.latitude, element.longitude]).addTo(map);
+                    var text = "<b>" + element.comment + "</br>";
+                    marker.bindPopup(text);
+                }
 
-                var text = "<b>" + data.data[0].comment + "</br>";
-
-                marker.bindPopup(text);
               }
          }
 
                   if (navigator.geolocation) {
            navigator.geolocation.getCurrentPosition(getLocation);
          }
-</script>
 
+      </script>
 <button onclick="post()">Create Post</button>
-
 <button onclick="getPosts()">Get NearMe posts</button>
-
 <p id="demo"></p>
-
 <script>
-var x = document.getElementById("demo");
+         var x = document.getElementById("demo");
 
-function post() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(createPost);
-  } else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
+         function post() {
+           if (navigator.geolocation) {
+             navigator.geolocation.getCurrentPosition(createPost);
+           } else {
+             x.innerHTML = "Geolocation is not supported by this browser.";
+           }
+         }
 
-function createPost(position) {
-  var data = {
-    comment: "helloworld",
-    latitude: position.coords.latitude,
-    longitude:  position.coords.longitude
-  };
+         function createPost(position) {
+           var data = {
+             comment: "helloworld",
+             latitude: position.coords.latitude,
+             longitude:  position.coords.longitude
+           };
 
-  var json = JSON.stringify(data);
+           var json = JSON.stringify(data);
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://192.168.0.13:9000/posts", true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(json);
-  x.innerHTML = "Post Created";
-}
+           var xhr = new XMLHttpRequest();
+           xhr.open("POST", "http://localhost:9000/posts", true);
+           xhr.setRequestHeader('Content-Type', 'application/json');
+           xhr.send(json);
+           x.innerHTML = "Post Created";
+         }
 
-function getPosts() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(getNearMePosts);
-  } else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
+         function getPosts() {
+           if (navigator.geolocation) {
+             navigator.geolocation.getCurrentPosition(getNearMePosts);
+           } else {
+             x.innerHTML = "Geolocation is not supported by this browser.";
+           }
+         }
 
-function getNearMePosts(position) {
-  var data = {
-    latitude: position.coords.latitude,
-    longitude:  position.coords.longitude
-  };
+         function getNearMePosts(position) {
+           var data = {
+             latitude: position.coords.latitude,
+             longitude:  position.coords.longitude
+           };
 
-  var json = JSON.stringify(data);
+           var json = JSON.stringify(data);
 
-  const fetchPromise = fetch("http://192.168.0.13:9000/posts/nearMe", {
-    method: "post",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: json
-  })
+           const fetchPromise = fetch("http://localhost:9000/posts/nearMe", {
+             method: "post",
+             headers: {
+               'Accept': 'application/json',
+               'Content-Type': 'application/json'
+             },
+             body: json
+           })
 
-  fetchPromise.then(response => {
-    return response.json();
-  }).then(data => {
-     x.innerHTML = JSON.stringify(data);
-     getLocation(position, data);
-  });
-}
+           fetchPromise.then(response => {
+             return response.json();
+           }).then(data => {
+              x.innerHTML = JSON.stringify(data);
+              getLocation(position, data);
+           });
+         }
 
-</script>
 
+      </script>
 </body>
 </html>
-
