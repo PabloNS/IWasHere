@@ -26,5 +26,5 @@ public class User {
 
     private LocalDateTime creationDate;
 
-    private LocalDateTime lastTimeAskedForPosts;
+    private LocalDateTime lastTimeAskedForNotes;
 }

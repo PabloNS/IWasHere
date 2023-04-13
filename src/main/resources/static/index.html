@@ -2,9 +2,23 @@
 <html>
 <head>
     <link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet"/>
+    <style>
+    .center {
+        margin: auto;
+        width: 60%;
+        padding: 10px;
+        text-align: center;
+    }
+</style>
 </head>
 <body>
-<div id="map" style="width: 900px; height: 580px"></div>
+<div class="center" id="map" style="width: 500px; height:500px"></div>
+<div class="center" id="buttons">
+    <input  class="center" type="text" id="comment" name="comment" placeholder="Write your note here"><br><br>
+    <button class="center" onclick="note()">Create Note</button>
+    <p class="center" id="result"></p>
+    <button class="center" onclick="getNotes()">Get NearMe notes</button>
+</div>
 <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 <script>
          let mapOptions;
@@ -56,30 +70,28 @@
          }
 
       </script>
-<button onclick="post()">Create Post</button>
-<button onclick="getPosts()">Get NearMe posts</button>
-<p id="demo"></p>
 <script>
-         var x = document.getElementById("demo");
+         var x = document.getElementById("result");
 
-         function post() {
+         function note() {
            if (navigator.geolocation) {
-             navigator.geolocation.getCurrentPosition(createPost);
+             navigator.geolocation.getCurrentPosition(createNote);
            } else {
              x.innerHTML = "Geolocation is not supported by this browser.";
            }
          }
 
-         function createPost(position) {
+         function createNote(position) {
+           var note = document.getElementById("comment").value;
            var data = {
-             comment: "helloworld",
+             comment: note,
              latitude: position.coords.latitude,
              longitude:  position.coords.longitude
            };
 
            var json = JSON.stringify(data);
 
-           const fetchPromise = fetch("http://localhost:9000/posts", {
+           const fetchPromise = fetch("http://localhost:9000/notes", {
              method: "post",
              headers: {
                'Accept': 'application/json',
@@ -88,18 +100,19 @@
              body: json
            })
 
-           x.innerHTML = "Post Created";
+           x.innerHTML = "Your note was succesfully created!";
+           document.getElementById('comment').value = "";
          }
 
-         function getPosts() {
+         function getNotes() {
            if (navigator.geolocation) {
-             navigator.geolocation.getCurrentPosition(getNearMePosts);
+             navigator.geolocation.getCurrentPosition(getNearMeNotes);
            } else {
              x.innerHTML = "Geolocation is not supported by this browser.";
            }
          }
 
-         function getNearMePosts(position) {
+         function getNearMeNotes(position) {
            var data = {
              latitude: position.coords.latitude,
              longitude:  position.coords.longitude
@@ -107,7 +120,7 @@
 
            var json = JSON.stringify(data);
 
-           const fetchPromise = fetch("http://localhost:9000/posts/nearMe", {
+           const fetchPromise = fetch("http://localhost:9000/notes/nearMe", {
              method: "post",
              headers: {
                'Accept': 'application/json',
@@ -119,7 +132,7 @@
            fetchPromise.then(response => {
              return response.json();
            }).then(data => {
-              x.innerHTML = JSON.stringify(data);
+              console.log(JSON.stringify(data));
               getLocation(position, data);
            });
          }

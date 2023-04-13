@@ -1,9 +1,9 @@
 package com.example.IWasHere.service;
 
-import com.example.IWasHere.data.entity.Post;
+import com.example.IWasHere.data.entity.Note;
 import com.example.IWasHere.data.entity.User;
 import com.example.IWasHere.data.repository.UserRepository;
-import com.example.IWasHere.dto.PostDTO;
+import com.example.IWasHere.dto.NoteDTO;
 import com.example.IWasHere.dto.UserDTO;
 import com.example.IWasHere.mapper.UserMapper;
 import lombok.AllArgsConstructor;

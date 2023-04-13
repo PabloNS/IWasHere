@@ -5,19 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostDTO {
+public class NotesDTO {
 
-    private Double latitude;
-
-    private Double longitude;
-
-    private String comment;
-
-    private LocalDateTime creationDate;
+    private List<NoteDTO> data;
 }
