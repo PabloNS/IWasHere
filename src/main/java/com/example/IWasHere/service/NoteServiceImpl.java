@@ -23,6 +23,10 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public void createNote(NoteDTO note, HttpServletRequest request) {
         Note noteDB = noteMapper.noteDTOToNote(note);
+
+        //to generate a note close to me
+        randomizeLocationNote(noteDB);
+
         noteDB.setCreationDate(LocalDateTime.now());
         noteDB.setIp(request.getRemoteAddr());
         noteRepository.save(noteDB);
@@ -36,10 +40,25 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public NotesDTO getNearMeNotes(PositionDTO positionDTO) {
         return NotesDTO.builder().data(getAllNotes().getData().stream()
-                .filter(p -> positionDTO.getLatitude() <= p.getLatitude() + 1d/111d
-                        && positionDTO.getLatitude() >= p.getLatitude() - 1d/111d
-                        && positionDTO.getLongitude() <= p.getLongitude() + 1d/86d
-                        && positionDTO.getLongitude() <= p.getLongitude() + 1d/86d)
+                .filter(p -> positionDTO.getLatitude() <= p.getLatitude() + 0.03d/111d
+                        && positionDTO.getLatitude() >= p.getLatitude() - 0.03d/111d
+                        && positionDTO.getLongitude() <= p.getLongitude() + 0.03d/55d
+                        && positionDTO.getLongitude() <= p.getLongitude() + 0.03d/55d)
                 .toList()).build();
+    }
+
+    private void randomizeLocationNote(Note noteDB) {
+        double random = Math.random();
+        if(random<=0.5) {
+            noteDB.setLatitude(noteDB.getLatitude() - (Math.random() <0.5 ? 0.01d : 0.02d) / 111d);
+        } else {
+            noteDB.setLatitude(noteDB.getLatitude() + (Math.random() <0.5 ? 0.01d : 0.02d) / 111d);
+        }
+        random = Math.random();
+        if(random<=0.5) {
+            noteDB.setLongitude(noteDB.getLongitude() - (Math.random() <0.5 ? 0.01d : 0.02d) / 55d);
+        } else {
+            noteDB.setLongitude(noteDB.getLongitude() + (Math.random() <0.5 ? 0.01d : 0.02d) / 55d);
+        }
     }
 }

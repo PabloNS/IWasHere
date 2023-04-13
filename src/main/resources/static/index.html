@@ -38,7 +38,7 @@
               // Creating map options
               mapOptions = {
                 center: [location.latitude, location.longitude],
-                zoom: 15
+                zoom: 14
               }
 
               // Creating a map object
@@ -55,6 +55,15 @@
               }
 
               markerGroup = L.layerGroup().addTo(map);
+
+              var meIcon = L.icon({
+                  iconUrl: 'me.png',
+                  iconSize:     [30, 30]
+              });
+
+              var markerLocation = L.marker([location.latitude, location.longitude], {icon: meIcon}).addTo(markerGroup);
+              var text = "<b> Your location </br>";
+              markerLocation.bindPopup(text);
 
               if(data) {
                 for (const element of data.data) {
