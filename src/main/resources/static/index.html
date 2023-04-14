@@ -14,15 +14,17 @@
 </head>
 
 <body>
-  <div class="center" id="map" style="width: 500px; height:500px"></div>
-  <div class="center" id="buttons">
-    <input class="center" type="text" id="comment" name="comment" placeholder="Write your note here"><br><br>
-    <button class="center" onclick="note()">Create Note</button>
-    <p class="center" id="result"></p>
-    <button class="center" onclick="getNotes()">Get NearMe notes</button>
-  </div>
-  <script src="leafletjs.js"></script>
-  <script>
+<div class="center" id="map" style="width: 500px; height:500px"></div>
+<div class="center" id="buttons">
+  <input class="center" type="text" id="nickname" name="nickname" placeholder="Choose your nickname"><br><br>
+  <p class="center" id="resultNickname"></p>
+  <input class="center" type="text" id="comment" name="comment" placeholder="Write your note here"><br><br>
+  <button class="center" onclick="note()">Create Note</button>
+  <p class="center" id="result"></p>
+  <button class="center" onclick="getNotes()">Get NearMe notes</button>
+</div>
+<script src="leafletjs.js"></script>
+<script>
     let mapOptions;
 
     let map;
@@ -40,7 +42,7 @@
       // Creating map options
       mapOptions = {
         center: [location.latitude, location.longitude],
-        zoom: 18
+        zoom: 10
       }
 
       // Creating a map object
@@ -55,7 +57,7 @@
       } else {
         map.removeLayer(markerGroup);
         map.panTo([location.latitude, location.longitude]);
-        map.zoomIn(18);
+        //map.zoomIn(18);
       }
 
       markerGroup = L.layerGroup().addTo(map);
@@ -72,7 +74,7 @@
       if (data) {
         for (const element of data.data) {
           var marker = L.marker([element.latitude, element.longitude]).addTo(markerGroup);
-          var text = "<h2>" + element.userNickName + "</h2>" +
+          var text = "<h2>" + element.userNickname + "</h2>" +
             "<br>" + element.comment.substring(0, 40) + "</br>" +
             "<br>" + element.comment.substring(40, 80) + "</br>" +
             "<br>" + element.comment.substring(80) + "</br>"
@@ -85,8 +87,9 @@
       navigator.geolocation.getCurrentPosition(getLocation);
     }
   </script>
-  <script>
+<script>
     var result = document.getElementById("result");
+    var resultNickname = document.getElementById("resultNickname");
 
     function note() {
       if (navigator.geolocation) {
@@ -96,15 +99,26 @@
       }
     }
 
+    let nickname;
+
     function createNote(position) {
+      if(nickname == undefined) {
+        nickname = document.getElementById("nickname").value;
+      }
       var note = document.getElementById("comment").value;
 
-      if (note.length < 20 || note.length > 100) {
+      if(nickname.length < 5 || nickname.length>20){
+        resultNickname.innerHTML = "Write your nickname between 5 and 20 characters"
+        resultNickname.style.color = "red";
+      } else if (note.length < 20 || note.length > 100) {
+        resultNickname.innerHTML = nickname;
+        resultNickname.style.color = "black";
         result.innerHTML = "Write a note between 20 and 100 characters";
         result.style.color = "red";
       } else {
         var data = {
           comment: note,
+          userNickname: nickname,
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         };
@@ -121,7 +135,15 @@
         })
 
         result.innerHTML = "Your note was successfully created!";
-        result.style.color = "black";
+        result.style.color = "green";
+
+        resultNickname.innerHTML = nickname;
+        resultNickname.style.color = "black";
+
+        if(document.getElementById("nickname") != null) {
+          document.getElementById("nickname").remove();
+        }
+
         document.getElementById('comment').value = "";
       }
     }

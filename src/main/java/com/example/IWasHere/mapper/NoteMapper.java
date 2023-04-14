@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface NoteMapper {
 
-    @Mapping(target = "userNickName", source = "note.user.nickName")
+    //@Mapping(target = "userNickname", source = "note.user.nickname")
     NoteDTO noteToNoteDto(Note note);
 
     Note noteDTOToNote(NoteDTO note);

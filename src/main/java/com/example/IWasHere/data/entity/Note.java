@@ -20,6 +20,8 @@ public class Note {
     @ManyToOne
     private User user;
 
+    private String userNickname;
+
     private String ip;
 
     private Double latitude;

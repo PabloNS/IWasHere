@@ -21,5 +21,5 @@ public class NoteDTO {
 
     private LocalDateTime creationDate;
 
-    private String userNickName;
+    private String userNickname;
 }

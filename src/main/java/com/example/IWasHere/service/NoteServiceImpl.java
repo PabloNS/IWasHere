@@ -29,12 +29,12 @@ public class NoteServiceImpl implements NoteService {
         Note noteDB = noteMapper.noteDTOToNote(note);
 
         //to generate a note close to me
-        randomizeLocationNote(noteDB);
+        //randomizeLocationNote(noteDB);
 
-        User user = new User();
-        user.setNickName("Perry");
-        userRepository.save(user);
-        noteDB.setUser(user);
+        //User user = new User();
+        //user.setNickname(note.getUserNickname());
+        //userRepository.save(user);
+        //noteDB.setUser(user);
 
         noteDB.setCreationDate(LocalDateTime.now());
         noteDB.setIp(request.getRemoteAddr());
@@ -48,12 +48,13 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public NotesDTO getNearMeNotes(PositionDTO positionDTO) {
-        return NotesDTO.builder().data(getAllNotes().getData().stream()
+        /*return NotesDTO.builder().data(getAllNotes().getData().stream()
                 .filter(p -> positionDTO.getLatitude() <= p.getLatitude() + 0.03d/111d
                         && positionDTO.getLatitude() >= p.getLatitude() - 0.03d/111d
                         && positionDTO.getLongitude() <= p.getLongitude() + 0.03d/55d
                         && positionDTO.getLongitude() <= p.getLongitude() + 0.03d/55d)
-                .toList()).build();
+                .toList()).build();*/
+        return NotesDTO.builder().data(getAllNotes().getData()).build();
     }
 
     private void randomizeLocationNote(Note noteDB) {
