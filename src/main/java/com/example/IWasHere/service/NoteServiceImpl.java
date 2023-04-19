@@ -10,12 +10,15 @@ import com.example.IWasHere.dto.NotesDTO;
 import com.example.IWasHere.mapper.NoteMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class NoteServiceImpl implements NoteService {
 
     private NoteMapper noteMapper;
@@ -43,7 +46,9 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public NotesDTO getAllNotes() {
-        return NotesDTO.builder().data(noteMapper.map(noteRepository.findAll())).build();
+        List<NoteDTO> notes = noteMapper.map(noteRepository.findAll());
+        log.info("Notes found: " + notes);
+        return NotesDTO.builder().data(notes).build();
     }
 
     @Override

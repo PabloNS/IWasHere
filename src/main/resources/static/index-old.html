@@ -1,74 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-
-  <!-- Basic Page Needs
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  <title>I Was Here</title>
-  <meta name="description" content="IWasHere">
-  <meta name="author" content="PabloNS">
-
-  <!-- Mobile Specific Metas
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- FONT
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-
-  <!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
-
-  <!-- Favicon
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <!--<link rel="icon" type="image/png" href="images/favicon.png"> -->
-
   <link href="./leafletjs.css" rel="stylesheet" />
-
   <style>
-    .centered {
-      margin-left: 50%;
-      transform: translateX(-50%);
+    .center {
+      margin: auto;
+      width: 60%;
+      padding: 10px;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
-
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container">
-    <div class="row">
-      <div class="u-full-width centered" id="map" style="width: 500px; height:500px"></div>
-    </div>
-    <div class="row">
-      <div class="offset-by-three one-half column"
-        style="margin-top:5%; box-shadow:0 2px 10px #606060; padding: 3rem; padding-bottom: 1rem; border-radius: 1rem">
-        <!--<img th:src="@{/images/login.png}" width="150" height="150" alt="Logo" class="centered"/>-->
-        <!--<form class="u-full-width" style="margin-top: 1rem">-->
-
-          <label for="nickname">Nickname</label>
-          <input type="text" id="nickname" name="nickname" class="u-full-width">
-          <p id="resultNickname"></p>
-
-          <label for="comment">Comment</label>
-          <input type="text" id="comment" name="comment" class="u-full-width">
-
-          <button class="button-primary u-full-width" onclick="note()">Create Note</button>
-          <p id="result"></p>
-
-          <button class="button-primary u-full-width" onclick="getNotes()">Get Near Me Notes</button>
-        <!--</form>-->
-      </div>
-    </div>
-  </div>
-
-  <script src="leafletjs.js"></script>
-  <script>
+<div class="center" id="map" style="width: 500px; height:500px"></div>
+<div class="center" id="buttons">
+  <p class="center" id="instructions"> To create a note: Write your nickname and your note and click Create Note.</p>
+  <p class="center" id="instructions2">
+    To read other users notes: Click Get Near Me Notes, wait a bit and find and click the blue signs in the map.
+  </p>
+  <input class="center" type="text" id="nickname" name="nickname" placeholder="Choose your nickname"><br><br>
+  <p class="center" id="resultNickname"></p>
+  <input class="center" type="text" id="comment" name="comment" placeholder="Write your note here"><br><br>
+  <button class="center" onclick="note()">Create Note</button>
+  <p class="center" id="result"></p>
+  <button class="center" onclick="getNotes()">Get Near Me Notes</button>
+</div>
+<script src="leafletjs.js"></script>
+<script>
     let mapOptions;
 
     let map;
@@ -131,7 +91,7 @@
       navigator.geolocation.getCurrentPosition(getLocation);
     }
   </script>
-  <script>
+<script>
     var result = document.getElementById("result");
     var resultNickname = document.getElementById("resultNickname");
 
@@ -146,12 +106,12 @@
     let nickname;
 
     function createNote(position) {
-      if (nickname == undefined) {
+      if(nickname == undefined) {
         nickname = document.getElementById("nickname").value;
       }
       var note = document.getElementById("comment").value;
 
-      if (nickname.length < 5 || nickname.length > 20) {
+      if(nickname.length < 5 || nickname.length>20){
         resultNickname.innerHTML = "Write your nickname between 5 and 20 characters"
         resultNickname.style.color = "red";
       } else if (note.length < 20 || note.length > 100) {
@@ -184,7 +144,7 @@
         resultNickname.innerHTML = nickname;
         resultNickname.style.color = "black";
 
-        if (document.getElementById("nickname") != null) {
+        if(document.getElementById("nickname") != null) {
           document.getElementById("nickname").remove();
         }
 
@@ -225,8 +185,6 @@
       });
     }
   </script>
-  <!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>
 
 </html>
