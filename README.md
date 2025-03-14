@@ -1,5 +1,5 @@
 Use ngrok to support https
-El front y el back deberian ser 2 servers distintos
+Use IWasHereFront for Front
 
 Ngrok config for multiple ports in same free account\
 ngrok config check\
