@@ -20,18 +20,19 @@ public class NoteController {
 
     @PostMapping
     public void createNote(@RequestBody NoteDTO note, HttpServletRequest request) {
-        log.info("CreateNote invoked! " + note);
+        log.info("CreateNote invoked! From "  + request.getHeader("x-forwarded-for") + " Note: " + note);
         noteService.createNote(note, request);
     }
 
     @GetMapping
     public NotesDTO getAllNotes(HttpServletRequest request) {
-        System.out.println(request.getRemoteAddr());
+        log.info("GetAllNotes invoked! " + "From " + request.getHeader("x-forwarded-for"));
         return noteService.getAllNotes();
     }
 
     @PostMapping("nearMe")
-    public NotesDTO getNearMeNotes(@RequestBody PositionDTO positionDTO) {
+    public NotesDTO getNearMeNotes(@RequestBody PositionDTO positionDTO, HttpServletRequest request) {
+        log.info("GetNearMeNotes invoked! " + "From " + request.getHeader("x-forwarded-for"));
         return noteService.getNearMeNotes(positionDTO);
     }
 }

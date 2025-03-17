@@ -40,7 +40,7 @@ public class NoteServiceImpl implements NoteService {
         //noteDB.setUser(user);
 
         noteDB.setCreationDate(LocalDateTime.now());
-        noteDB.setIp(request.getRemoteAddr());
+        noteDB.setIp(request.getHeader("x-forwarded-for"));
         noteRepository.save(noteDB);
     }
 
