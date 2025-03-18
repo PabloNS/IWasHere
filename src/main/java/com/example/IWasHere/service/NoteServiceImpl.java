@@ -7,6 +7,7 @@ import com.example.IWasHere.data.repository.UserRepository;
 import com.example.IWasHere.dto.PositionDTO;
 import com.example.IWasHere.dto.NoteDTO;
 import com.example.IWasHere.dto.NotesDTO;
+import com.example.IWasHere.excepctions.ActiveNoteForIpException;
 import com.example.IWasHere.mapper.NoteMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,12 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public void createNote(NoteDTO note, HttpServletRequest request) {
+        List<Note> activeNotesByIp = noteRepository.findByIp(request.getHeader("x-forwarded-for"));
+
+        if(!activeNotesByIp.isEmpty()) {
+            throw new ActiveNoteForIpException();
+        }
+
         Note noteDB = noteMapper.noteDTOToNote(note);
 
         //to generate a note close to me
@@ -46,7 +53,10 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public NotesDTO getAllNotes() {
+        LocalDateTime now = LocalDateTime.now();
         List<NoteDTO> notes = noteMapper.map(noteRepository.findAll());
+        notes = notes.stream().filter(noteDTO -> noteDTO.getCreationDate().plusHours(24)
+                .isAfter(now)).toList();
         log.info("Notes found: " + notes);
         return NotesDTO.builder().data(notes).build();
     }

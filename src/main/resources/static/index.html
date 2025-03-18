@@ -152,6 +152,20 @@
 
     let nickname;
 
+
+    async function requestCreateNote(json) {
+      const fetchPromise = await fetch("http://localhost:9000/notes", {
+        method: "post",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: json
+      });
+
+      return await fetchPromise;
+    }
+
     function createNote(position) {
       if (nickname == undefined) {
         nickname = document.getElementById("nickname").value;
@@ -176,26 +190,26 @@
 
         var json = JSON.stringify(data);
 
-        const fetchPromise = fetch("http://localhost:9000/notes", {
-          method: "post",
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: json
-        })
+        requestCreateNote(json).then(response => {
+          if(response.status == 200) {
+            result.innerHTML = "Your note was successfully created!";
+            result.style.color = "green";
 
-        result.innerHTML = "Your note was successfully created!";
-        result.style.color = "green";
+            resultNickname.innerHTML = nickname;
+            resultNickname.style.color = "black";
 
-        resultNickname.innerHTML = nickname;
-        resultNickname.style.color = "black";
+            if (document.getElementById("nickname") != null) {
+              document.getElementById("nickname").remove();
+            }
 
-        if (document.getElementById("nickname") != null) {
-          document.getElementById("nickname").remove();
-        }
+            document.getElementById('comment').value = "";
+          } else {
+            result.innerHTML = "Wait 24 hours to create a new note";
+            result.style.color = "red";
+          }
+        });
 
-        document.getElementById('comment').value = "";
+      
       }
     }
 
