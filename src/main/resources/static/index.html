@@ -154,7 +154,7 @@
 
 
     async function requestCreateNote(json) {
-      const fetchPromise = await fetch("http://localhost:9000/notes", {
+      const fetchPromise = await fetch("https://iwashere.onrender.com/notes", {
         method: "post",
         headers: {
           'Accept': 'application/json',
@@ -229,7 +229,7 @@
 
       var json = JSON.stringify(data);
 
-      const fetchPromise = fetch("http://localhost:9000/notes/nearMe", {
+      const fetchPromise = fetch("https://iwashere.onrender.com/notes/nearMe", {
         method: "post",
         headers: {
           'Accept': 'application/json',
