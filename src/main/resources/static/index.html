@@ -94,6 +94,15 @@
       color: #333;
       font-weight: bold;
     }
+
+    /* Asegurarse de que los mensajes sean visibles */
+    #noNotesMessage {
+      font-size: 16px;
+      color: red;
+      margin-top: 20px;
+      text-align: center;
+      width: 100%;
+    }
   </style>
 </head>
 
@@ -320,6 +329,9 @@
         if (data.data.length === 0) {
           noNotesMessage.innerHTML = "Sorry, no notes found.";
           noNotesMessage.style.color = "red";
+
+          // Asegurarse de que el mensaje de "no notes" esté visible
+          noNotesMessage.scrollIntoView({ behavior: "smooth", block: "center" });
         } else {
           getLocation(position, data);
         }
